@@ -3,7 +3,7 @@ A collection of startup and build scripts for configuring a production ready LEM
 
 ## Requirements
 
-- Ubuntu 18.04+ (May work on other Debian flavours but no promises)
+- Ubuntu 20.04+ (May work on other Debian flavours but no promises)
 
 ## Features
 
@@ -43,9 +43,9 @@ Configures Nginx and sets up SSL
 ## Installation
 
 1. `cd ~`
-2. `wget https://github.com/mattpfeffer/system-prep/archive/v1.0.0.tar.gz`
-3. `tar -xzf v1.1.tar.gz`
-4. `mv system-prep-1.1 system-prep`
+2. `wget https://github.com/mattpfeffer/system-prep/archive/v1.1.1.tar.gz`
+3. `tar -xzf v1.1.1.tar.gz`
+4. `mv system-prep-1.1.1 system-prep`
 5. `chmod u+x system-prep/start.sh` 
 
 ## Usage
