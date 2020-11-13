@@ -149,9 +149,9 @@ ${sudo} mkdir -p /var/log/system-prep
 
     # Install Nginx
     cd ..
-    ${sudo}dpkg -i $(find . -name 'nginx-full_*')
+    ${sudo}dpkg -i $(find . -name 'nginx-common_*') $(find . -name 'nginx-core_*')
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get install -fyq
-    ${sudo}apt-mark hold nginx nginx-common nginx-full
+    ${sudo}apt-mark hold nginx-common nginx-core
 
     # Install MariaDB and PHP
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get install -yq mariadb-server php-fpm php-mysql php-xml php-curl php-gd php-mbstring php-zip
