@@ -143,15 +143,15 @@ ${sudo} mkdir -p /var/log/system-prep
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get build-dep -yq nginx
 
     # Build Nginx
-    ${sudo}sed -ri -e '/common_configure_flags\s:=/,/\w$/ !b; /\w$/ a \                        --add-module=/opt/nginx/modules/ngx_cache_purge' -e 's/(\w)$/\1 \\/' $(find . -regextype sed -regex '.*debian/rules$')
+    ${sudo}sed -ri -e '/core_configure_flags\s:=/,/\w$/ !b; /\w$/ a \                        --add-module=/opt/nginx/modules/ngx_cache_purge' -e 's/(\w)$/\1 \\/' $(find . -regextype sed -regex '.*debian/rules$')
     cd $(find . -type d -name 'nginx-[0-9]*')
     ${sudo}dpkg-buildpackage -b
 
     # Install Nginx
     cd ..
-    ${sudo}dpkg -i $(find . -name 'nginx-full_*')
+    ${sudo}dpkg -i $(find . -name 'nginx-common_*') $(find . -name 'nginx-core_*')
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get install -fyq
-    ${sudo}apt-mark hold nginx nginx-common nginx-full
+    ${sudo}apt-mark hold nginx-common nginx-core
 
     # Install MariaDB and PHP
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get install -yq mariadb-server php-fpm php-mysql php-xml php-curl php-gd php-mbstring php-zip

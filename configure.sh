@@ -3,7 +3,7 @@
 # Script for configuring a server built with System Prep
 #
 # Copyright (c) 2018 Matt Pfeffer & Other Contributors. Licenced under https://opensource.org/licenses/MIT
-# 
+#
 # https://github.com/mattpfeffer/system-prep
 
 
@@ -35,13 +35,14 @@ read alias
 
 # Start logging
 {
-    
+
     # Remove old site configuration
     ${sudo}rm /etc/nginx/sites-enabled/default
     ${sudo}rm /etc/nginx/sites-available/default
-    
+
     # Setup web root
     ${sudo}mkdir -p /var/www/${project}
+    echo "<h1><?= 'It\'s aliiiivvvee!!!' ?></h1>" | ${sudo}tee /var/www/${project}/index.php
     ${sudo}chown -R www-data:www-data /var/www/${project}
 
     # Copy configuration stubs
@@ -61,21 +62,21 @@ read alias
             ${sudo}cp conf/nginx/hosts/laravel.conf /etc/nginx/sites-available/${project}.conf
             ${sudo}touch /etc/nginx/redirects/${project}.conf ;;
     esac
-    
+
     # Configure worker processes and connections
     worker_processes=$(grep processor /proc/cpuinfo | wc -l)
     worker_connections=$(ulimit -n)
 
     ${sudo}sed -ri -e "s/\{\{worker_processes\}\}/${worker_processes}/" -e "s/\{\{worker_connections\}\}/${worker_connections}/" /etc/nginx/nginx.conf
-    
+
     # Configure server block(s)
     ${sudo}sed -ri -e "s/\{\{name\}\}/${project}/g" -e "s/\{\{domain\}\}/${domain}/g" -e "s/\{\{alias\}\}/ ${alias}/g" /etc/nginx/sites-available/${project}.conf
-    
+
     # Enable server and restart Nginx
     ${sudo}ln -s /etc/nginx/sites-available/${project}.conf /etc/nginx/sites-enabled/${project}.conf
     ${sudo}mkdir /var/cache/nginx
     ${sudo}systemctl restart nginx
-    
+
     # Obtian certificate
     if [ -z "$alias" ]
     then
@@ -83,10 +84,10 @@ read alias
     else
         ${sudo}certbot certonly -n --email 'support@orangedigital.com.au' --agree-tos --webroot -w /var/www/${project} -d $domain -d $alias
     fi
-    
+
     # Generate strong DH params
     ${sudo}openssl dhparam -out /etc/ssl/dhparams.pem 2048
-    
+
     # Enable SSL
     ${sudo}sed -ri '/### IF SSL ###/,/### END IF SSL ###/ s/^([^#]*)#\s/\1/' /etc/nginx/sites-available/${project}.conf
     ${sudo}sed -ri '/### IF !SSL ###/,/### END IF !SSL ###/d' /etc/nginx/sites-available/${project}.conf
