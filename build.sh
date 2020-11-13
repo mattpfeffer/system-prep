@@ -143,7 +143,7 @@ ${sudo} mkdir -p /var/log/system-prep
     DEBIAN_FRONTEND=noninteractive ${sudo}apt-get build-dep -yq nginx
 
     # Build Nginx
-    ${sudo}sed -ri -e '/common_configure_flags\s:=/,/\w$/ !b; /\w$/ a \                        --add-module=/opt/nginx/modules/ngx_cache_purge' -e 's/(\w)$/\1 \\/' $(find . -regextype sed -regex '.*debian/rules$')
+    ${sudo}sed -ri -e '/core_configure_flags\s:=/,/\w$/ !b; /\w$/ a \                        --add-module=/opt/nginx/modules/ngx_cache_purge' -e 's/(\w)$/\1 \\/' $(find . -regextype sed -regex '.*debian/rules$')
     cd $(find . -type d -name 'nginx-[0-9]*')
     ${sudo}dpkg-buildpackage -b
 
